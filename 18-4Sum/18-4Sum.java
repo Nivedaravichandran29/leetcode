@@ -1,30 +1,38 @@
-// Last updated: 7/24/2026, 10:22:08 AM
+// Last updated: 7/24/2026, 10:23:07 AM
 1class Solution {
 2    public ListNode reverseKGroup(ListNode head, int k) {
-3
-4        ListNode curr = head;
-5        int count = 0;
-6
-7        // Check if there are at least k nodes
-8        while (curr != null && count < k) {
-9            curr = curr.next;
-10            count++;
-11        }
-12
-13        // If k nodes exist, reverse them
-14        if (count == k) {
-15            curr = reverseKGroup(curr, k);
-16
-17            while (count-- > 0) {
-18                ListNode temp = head.next;
-19                head.next = curr;
-20                curr = head;
-21                head = temp;
-22            }
-23
-24            head = curr;
-25        }
-26
-27        return head;
-28    }
-29}
+3        ListNode dummy = new ListNode(0);
+4        dummy.next = head;
+5
+6        ListNode prevGroup = dummy;
+7
+8        while (true) {
+9            ListNode kth = prevGroup;
+10
+11            for (int i = 0; i < k && kth != null; i++) {
+12                kth = kth.next;
+13            }
+14
+15            if (kth == null) {
+16                break;
+17            }
+18
+19            ListNode groupNext = kth.next;
+20            ListNode prev = groupNext;
+21            ListNode curr = prevGroup.next;
+22
+23            while (curr != groupNext) {
+24                ListNode temp = curr.next;
+25                curr.next = prev;
+26                prev = curr;
+27                curr = temp;
+28            }
+29
+30            ListNode temp = prevGroup.next;
+31            prevGroup.next = kth;
+32            prevGroup = temp;
+33        }
+34
+35        return dummy.next;
+36    }
+37}
