@@ -1,54 +1,33 @@
-# Last updated: 9/24/2026, 9:58:45 PM
-1from collections import defaultdict, deque
-2
-3class Solution:
-4    def findLadders(self, beginWord, endWord, wordList):
-5        wordSet = set(wordList)
+# Last updated: 9/24/2026, 10:03:50 PM
+1class Solution:
+2    def minCut(self, s):
+3        n = len(s)
+4
+5        palindrome = [[False] * n for _ in range(n)]
 6
-7        if endWord not in wordSet:
-8            return []
+7        for i in range(n):
+8            palindrome[i][i] = True
 9
-10        parents = defaultdict(list)
-11        level = {beginWord}
-12        found = False
+10        for length in range(2, n + 1):
+11            for i in range(n - length + 1):
+12                j = i + length - 1
 13
-14        while level and not found:
-15            nextLevel = set()
-16
-17            for word in level:
-18                for i in range(len(word)):
-19                    for c in "abcdefghijklmnopqrstuvwxyz":
-20                        newWord = word[:i] + c + word[i + 1:]
+14                if s[i] == s[j]:
+15                    if length == 2:
+16                        palindrome[i][j] = True
+17                    else:
+18                        palindrome[i][j] = palindrome[i + 1][j - 1]
+19
+20        dp = [0] * n
 21
-22                        if newWord in wordSet and newWord not in parents:
-23                            nextLevel.add(newWord)
-24                            parents[newWord].append(word)
-25
-26                        elif newWord in nextLevel:
-27                            parents[newWord].append(word)
-28
-29                        if newWord == endWord:
-30                            found = True
+22        for i in range(n):
+23            if palindrome[0][i]:
+24                dp[i] = 0
+25            else:
+26                dp[i] = i
+27
+28                for j in range(1, i + 1):
+29                    if palindrome[j][i]:
+30                        dp[i] = min(dp[i], dp[j - 1] + 1)
 31
-32            wordSet -= nextLevel
-33            level = nextLevel
-34
-35        if not found:
-36            return []
-37
-38        result = []
-39        path = [endWord]
-40
-41        def backtrack(word):
-42            if word == beginWord:
-43                result.append(path[::-1])
-44                return
-45
-46            for parent in parents[word]:
-47                path.append(parent)
-48                backtrack(parent)
-49                path.pop()
-50
-51        backtrack(endWord)
-52
-53        return result
+32        return dp[n - 1]
