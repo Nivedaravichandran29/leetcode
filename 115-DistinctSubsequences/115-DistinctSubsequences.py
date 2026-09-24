@@ -1,19 +1,54 @@
-# Last updated: 9/24/2026, 9:57:16 PM
-1class Solution:
-2    def numDistinct(self, s, t):
-3        m = len(s)
-4        n = len(t)
-5
-6        dp = [[0] * (n + 1) for _ in range(m + 1)]
-7
-8        for i in range(m + 1):
-9            dp[i][0] = 1
-10
-11        for i in range(1, m + 1):
-12            for j in range(1, n + 1):
-13                if s[i - 1] == t[j - 1]:
-14                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]
-15                else:
-16                    dp[i][j] = dp[i - 1][j]
-17
-18        return dp[m][n]
+# Last updated: 9/24/2026, 9:58:45 PM
+1from collections import defaultdict, deque
+2
+3class Solution:
+4    def findLadders(self, beginWord, endWord, wordList):
+5        wordSet = set(wordList)
+6
+7        if endWord not in wordSet:
+8            return []
+9
+10        parents = defaultdict(list)
+11        level = {beginWord}
+12        found = False
+13
+14        while level and not found:
+15            nextLevel = set()
+16
+17            for word in level:
+18                for i in range(len(word)):
+19                    for c in "abcdefghijklmnopqrstuvwxyz":
+20                        newWord = word[:i] + c + word[i + 1:]
+21
+22                        if newWord in wordSet and newWord not in parents:
+23                            nextLevel.add(newWord)
+24                            parents[newWord].append(word)
+25
+26                        elif newWord in nextLevel:
+27                            parents[newWord].append(word)
+28
+29                        if newWord == endWord:
+30                            found = True
+31
+32            wordSet -= nextLevel
+33            level = nextLevel
+34
+35        if not found:
+36            return []
+37
+38        result = []
+39        path = [endWord]
+40
+41        def backtrack(word):
+42            if word == beginWord:
+43                result.append(path[::-1])
+44                return
+45
+46            for parent in parents[word]:
+47                path.append(parent)
+48                backtrack(parent)
+49                path.pop()
+50
+51        backtrack(endWord)
+52
+53        return result
