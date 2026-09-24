@@ -1,13 +1,41 @@
-# Last updated: 9/24/2026, 10:16:42 PM
+# Last updated: 9/24/2026, 10:18:10 PM
 1class Solution:
-2    def shortestPalindrome(self, s):
-3        if not s:
-4            return ""
-5
-6        rev = s[::-1]
+2    def calculate(self, s):
+3        stack = []
+4        result = 0
+5        number = 0
+6        sign = 1
 7
-8        for i in range(len(s)):
-9            if s[:len(s) - i] == rev[i:]:
-10                return rev[:i] + s
+8        for ch in s:
+9            if ch.isdigit():
+10                number = number * 10 + int(ch)
 11
-12        return ""
+12            elif ch == '+':
+13                result += sign * number
+14                number = 0
+15                sign = 1
+16
+17            elif ch == '-':
+18                result += sign * number
+19                number = 0
+20                sign = -1
+21
+22            elif ch == '(':
+23                stack.append(result)
+24                stack.append(sign)
+25
+26                result = 0
+27                sign = 1
+28
+29            elif ch == ')':
+30                result += sign * number
+31                number = 0
+32
+33                sign = stack.pop()
+34                previous_result = stack.pop()
+35
+36                result = previous_result + sign * result
+37
+38        result += sign * number
+39
+40        return result
