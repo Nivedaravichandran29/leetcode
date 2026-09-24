@@ -1,18 +1,21 @@
-# Last updated: 9/24/2026, 10:33:19 PM
+# Last updated: 9/24/2026, 10:34:39 PM
 1class Solution:
-2    def toHex(self, num):
-3        if num == 0:
-4            return "0"
-5
-6        digits = "0123456789abcdef"
-7        result = ""
-8
-9        if num < 0:
-10            num += 2**32
-11
-12        while num > 0:
-13            digit = num & 15
-14            result = digits[digit] + result
-15            num >>= 4
+2    def longestPalindrome(self, s):
+3        count = {}
+4
+5        for ch in s:
+6            count[ch] = count.get(ch, 0) + 1
+7
+8        length = 0
+9        has_odd = False
+10
+11        for freq in count.values():
+12            length += (freq // 2) * 2
+13
+14            if freq % 2 == 1:
+15                has_odd = True
 16
-17        return result
+17        if has_odd:
+18            length += 1
+19
+20        return length
