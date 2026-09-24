@@ -1,22 +1,12 @@
-# Last updated: 9/24/2026, 10:30:34 PM
+# Last updated: 9/24/2026, 10:32:04 PM
 1class Solution:
-2    def reverseVowels(self, s):
-3        s = list(s)
-4        vowels = "aeiouAEIOU"
-5
-6        left = 0
-7        right = len(s) - 1
-8
-9        while left < right:
-10            while left < right and s[left] not in vowels:
-11                left += 1
-12
-13            while left < right and s[right] not in vowels:
-14                right -= 1
-15
-16            s[left], s[right] = s[right], s[left]
-17
-18            left += 1
-19            right -= 1
-20
-21        return "".join(s)
+2    def findTheDifference(self, s, t):
+3        result = 0
+4
+5        for ch in s:
+6            result ^= ord(ch)
+7
+8        for ch in t:
+9            result ^= ord(ch)
+10
+11        return chr(result)
